@@ -8,6 +8,14 @@
   </nb-header>
 </template>
 
+<script>
+export default {
+  props: {
+      data: Object
+  },
+};
+</script>
+
 <style>
 .header {
  background-color: #91e4fb;

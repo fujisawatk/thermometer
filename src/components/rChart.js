@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { VictoryTheme, VictoryChart, VictoryAxis, VictoryLine } from 'victory-native';
 
-export default class App extends React.Component {
+export default class Chart extends React.Component {
   render() {
     return (
       <View style={styles.container}>
@@ -66,7 +66,6 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#ccc',
     alignItems: 'center',
     justifyContent: 'center',
