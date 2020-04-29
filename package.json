@@ -19,7 +19,8 @@
     "react-native-web": "~0.12.2",
     "victory-native": "34.1.0",
     "vue-native-core": "^0.1.4",
-    "vue-native-helper": "^0.1.4"
+    "vue-native-helper": "^0.1.4",
+    "vuex": "^3.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
