@@ -28,18 +28,12 @@
             <view class="form">
               <nb-item class="date-form">
                 <nb-text class="date-title">日付</nb-text>
-                <nb-date-picker
-                  :defaultDate="iniDate"
-                  :modalTransparent="false"
-                  androidMode="default"
-                  :textStyle="{ color: 'black', fontSize: 25 }"
-                  :formatChosenDate="formatChosenDate"
-                />
+                <nb-text class="date-text">{{ formatIniDate }}</nb-text>
               </nb-item>
 
               <nb-item class="temp-form">
                 <nb-text class="temp-title">体温</nb-text>
-                <text-input placeholder="例）36.0" class="temp-input" />
+                <text-input class="temp-input" v-model="iniThermometer" />
                 <nb-text class="temp-unit">℃</nb-text>
               </nb-item>
               <nb-item class="cond-form">
@@ -70,7 +64,7 @@
             <view class="form-bottom">
               <nb-button large rounded
                 class="send-btn"
-                :on-press="toggleModal"
+                :on-press="savePosts"
               >
                 <nb-text class="send">完了</nb-text>
               </nb-button>
@@ -112,16 +106,18 @@ export default {
   },
   data: function() {
     return {
+      // モーダルON/OFF
       state: false,
-      chosenDate: new Date(),
-      formatChosenDate: date => moment(date).format('YYYY年MM月DD日'),
       // 初期値
       iniDate: new Date(),
-      iniThermometer: 36.5,
+      formatIniDate: moment(new Date()).format('YYYY年MM月DD日'),
+      iniThermometer: "36.5",
       iniCheckOne: false,
       iniCheckTwo: false,
       iniCheckThree: false,
       iniCheckFour: false,
+      // 保存データ
+      posts: []
     }
   },
   computed: {
@@ -148,6 +144,7 @@ export default {
     toggleModal: function() {
       return this.state = !this.state
     },
+
     // チェックのON/OFF切り替え
     changeCheckOne: function() {
       return this.iniCheckOne = !this.iniCheckOne
@@ -161,6 +158,29 @@ export default {
     changeCheckFour: function() {
       return this.iniCheckFour = !this.iniCheckFour
     },
+
+    // 記録を保存して、モーダルを閉じる
+    savePosts: function() {
+      this.posts = {
+        date: this.iniDate,
+        thermometer: this.iniThermometer,
+        checkOne: this.iniCheckOne,
+        checkTwo: this.iniCheckTwo,
+        checkThree: this.iniCheckThree,
+        checkFour: this.iniCheckFour,
+      };
+
+      console.log(this.posts);
+
+      // 一時データを初期化
+      this.iniThermometer = "36.5"
+      this.iniCheckOne = false
+      this.iniCheckTwo = false
+      this.iniCheckThree = false
+      this.iniCheckFour = false
+
+      return this.state = !this.state;
+    }
   }
 };
 </script> 
@@ -233,6 +253,7 @@ export default {
   margin-left: 40px;
 }
 
+.date-text,
 .temp-unit,
 .cond-text {
   font-size: 20px;
