@@ -29,7 +29,7 @@
               <nb-item class="date-form">
                 <nb-text class="date-title">日付</nb-text>
                 <nb-date-picker
-                  :defaultDate="defaultDate"
+                  :defaultDate="iniDate"
                   :modalTransparent="false"
                   androidMode="default"
                   :textStyle="{ color: 'black', fontSize: 25 }"
@@ -44,25 +44,25 @@
               </nb-item>
               <nb-item class="cond-form">
                 <nb-text class="cond-title">症状</nb-text>
-                <nb-checkbox :checked="true" />
+                <nb-checkbox :checked="iniCheckOne" :on-press="changeCheckOne"/>
                 <nb-text class="cond-text">37.5度以上の熱</nb-text>
               </nb-item>
 
               <nb-item class="cond-form">
                 <nb-text class="cond-title" />
-                <nb-checkbox :checked="true" />
+                <nb-checkbox :checked="iniCheckTwo" :on-press="changeCheckTwo" />
                 <nb-text class="cond-text">せき、たん</nb-text>
               </nb-item>
 
               <nb-item class="cond-form">
                 <nb-text class="cond-title" />
-                <nb-checkbox :checked="true" />
+                <nb-checkbox :checked="iniCheckThree" :on-press="changeCheckThree" />
                 <nb-text class="cond-text">だるさ</nb-text>
               </nb-item>
 
               <nb-item class="cond-form">
                 <nb-text class="cond-title" />
-                <nb-checkbox :checked="true" />
+                <nb-checkbox :checked="iniCheckFour" :on-press="changeCheckFour" />
                 <nb-text class="cond-text">息苦しさ</nb-text>
               </nb-item>
 
@@ -114,19 +114,53 @@ export default {
     return {
       state: false,
       chosenDate: new Date(),
-      defaultDate: new Date(),
-      formatChosenDate: date => moment(date).format('YYYY年MM月DD日')
+      formatChosenDate: date => moment(date).format('YYYY年MM月DD日'),
+      // 初期値
+      iniDate: new Date(),
+      iniThermometer: 36.5,
+      iniCheckOne: false,
+      iniCheckTwo: false,
+      iniCheckThree: false,
+      iniCheckFour: false,
     }
   },
   computed: {
+    // モーダルのON/OFFを監視
     isModalVisible: function() {
       return this.state
+    },
+    // チェックのON/OFFを監視
+    showCheckOne: function() {
+      return this.iniCheckOne;
+    },
+    showCheckTwo: function() {
+      return this.iniCheckTwo;
+    },
+    showCheckThree: function() {
+      return this.iniCheckThree;
+    },
+    showCheckFour: function() {
+      return this.iniCheckFour;
     }
   },
   methods: {
+    // モーダルのON/OFF切り替え
     toggleModal: function() {
       return this.state = !this.state
-    }
+    },
+    // チェックのON/OFF切り替え
+    changeCheckOne: function() {
+      return this.iniCheckOne = !this.iniCheckOne
+    },
+    changeCheckTwo: function() {
+      return this.iniCheckTwo = !this.iniCheckTwo
+    },
+    changeCheckThree: function() {
+      return this.iniCheckThree = !this.iniCheckThree
+    },
+    changeCheckFour: function() {
+      return this.iniCheckFour = !this.iniCheckFour
+    },
   }
 };
 </script> 
