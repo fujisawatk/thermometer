@@ -38,25 +38,25 @@
               </nb-item>
               <nb-item class="cond-form">
                 <nb-text class="cond-title">症状</nb-text>
-                <nb-checkbox :checked="iniCheckOne" :on-press="changeCheckOne"/>
+                <nb-checkbox :checked="checkOne" :on-press="changeCheckOne"/>
                 <nb-text class="cond-text">37.5度以上の熱</nb-text>
               </nb-item>
 
               <nb-item class="cond-form">
                 <nb-text class="cond-title" />
-                <nb-checkbox :checked="iniCheckTwo" :on-press="changeCheckTwo" />
+                <nb-checkbox :checked="checkTwo" :on-press="changeCheckTwo" />
                 <nb-text class="cond-text">せき、たん</nb-text>
               </nb-item>
 
               <nb-item class="cond-form">
                 <nb-text class="cond-title" />
-                <nb-checkbox :checked="iniCheckThree" :on-press="changeCheckThree" />
+                <nb-checkbox :checked="checkThree" :on-press="changeCheckThree" />
                 <nb-text class="cond-text">だるさ</nb-text>
               </nb-item>
 
               <nb-item class="cond-form">
                 <nb-text class="cond-title" />
-                <nb-checkbox :checked="iniCheckFour" :on-press="changeCheckFour" />
+                <nb-checkbox :checked="checkFour" :on-press="changeCheckFour" />
                 <nb-text class="cond-text">息苦しさ</nb-text>
               </nb-item>
 
@@ -92,6 +92,7 @@ import { SafeAreaView } from 'react-native';
 import Modal from "react-native-modal";
 import React from "react";
 import moment from 'moment';
+import store from './store';
 
 export default {
   components: {
@@ -108,16 +109,8 @@ export default {
     return {
       // モーダルON/OFF
       state: false,
-      // 初期値
-      iniDate: new Date(),
       formatIniDate: moment(new Date()).format('YYYY年MM月DD日'),
       iniThermometer: "36.5",
-      iniCheckOne: false,
-      iniCheckTwo: false,
-      iniCheckThree: false,
-      iniCheckFour: false,
-      // 保存データ
-      posts: []
     }
   },
   computed: {
@@ -125,18 +118,18 @@ export default {
     isModalVisible: function() {
       return this.state
     },
-    // チェックのON/OFFを監視
-    showCheckOne: function() {
-      return this.iniCheckOne;
+    // 初期値の変更を監視
+    checkOne: function() {
+      return store.state.iniCheckOne;
     },
-    showCheckTwo: function() {
-      return this.iniCheckTwo;
+    checkTwo: function() {
+      return store.state.iniCheckTwo;
     },
-    showCheckThree: function() {
-      return this.iniCheckThree;
+    checkThree: function() {
+      return store.state.iniCheckThree;
     },
-    showCheckFour: function() {
-      return this.iniCheckFour;
+    checkFour: function() {
+      return store.state.iniCheckFour;
     }
   },
   methods: {
@@ -147,38 +140,24 @@ export default {
 
     // チェックのON/OFF切り替え
     changeCheckOne: function() {
-      return this.iniCheckOne = !this.iniCheckOne
+      return store.state.iniCheckOne = !store.state.iniCheckOne
     },
     changeCheckTwo: function() {
-      return this.iniCheckTwo = !this.iniCheckTwo
+      return store.state.iniCheckTwo = !store.state.iniCheckTwo
     },
     changeCheckThree: function() {
-      return this.iniCheckThree = !this.iniCheckThree
+      return store.state.iniCheckThree = !store.state.iniCheckThree
     },
     changeCheckFour: function() {
-      return this.iniCheckFour = !this.iniCheckFour
+      return store.state.iniCheckFour = !store.state.iniCheckFour
     },
 
     // 記録を保存して、モーダルを閉じる
     savePosts: function() {
-      this.posts = {
-        date: this.iniDate,
-        thermometer: this.iniThermometer,
-        checkOne: this.iniCheckOne,
-        checkTwo: this.iniCheckTwo,
-        checkThree: this.iniCheckThree,
-        checkFour: this.iniCheckFour,
-      };
-
-      console.log(this.posts);
-
-      // 一時データを初期化
+      store.dispatch("savePostsOne", {
+        thermometer: this.iniThermometer
+      })
       this.iniThermometer = "36.5"
-      this.iniCheckOne = false
-      this.iniCheckTwo = false
-      this.iniCheckThree = false
-      this.iniCheckFour = false
-
       return this.state = !this.state;
     }
   }
