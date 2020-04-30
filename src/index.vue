@@ -72,12 +72,14 @@
           </view>
         </modal>
     
-
         <view class="footer">
           <view class="button">
             <nb-icon type="AntDesign" name="plus" class="plus" :on-press="toggleModal" />
           </view>
         </view>
+
+        <!-- デバッグ用 -->
+        <nb-icon type="FontAwesome" name="square" :on-press="delPosts" />
     </root>
 </template>
 
@@ -88,7 +90,7 @@ import Header from "./components/header.vue";
 import Chart from "./components/rChart.js";
 import List from "./components/list.vue";
 // import Btn from "./components/btn.vue";
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, Alert } from 'react-native';
 import Modal from "react-native-modal";
 import React from "react";
 import moment from 'moment';
@@ -109,9 +111,12 @@ export default {
     return {
       // モーダルON/OFF
       state: false,
-      formatIniDate: moment(new Date()).format('YYYY年MM月DD日'),
+      formatIniDate: moment(new Date()).format('MM月DD日'),
       iniThermometer: "36.5",
     }
+  },
+  created () {
+    store.getters.getPosts;
   },
   computed: {
     // モーダルのON/OFFを監視
@@ -159,6 +164,12 @@ export default {
       })
       this.iniThermometer = "36.5"
       return this.state = !this.state;
+    },
+
+    // 記録全件削除処理（デバッグ用）
+    delPosts: function() {
+      store.getters.delPosts;
+      return Alert.alert("削除しました")
     }
   }
 };
