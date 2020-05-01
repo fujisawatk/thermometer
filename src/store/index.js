@@ -9,7 +9,7 @@ Vue.use(Vuex);
 const storage = new Storage({
   size: 1000,
   storageBackend: AsyncStorage,
-  defaultExpires: 1000 * 3600,
+  defaultExpires: 1000 * 3600 * 24 * 10,
   enableCache: true,
   sync: {}
 });

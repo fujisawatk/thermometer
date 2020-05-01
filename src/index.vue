@@ -6,8 +6,8 @@
       <!-- 記録リスト一覧 -->
         <nb-container class="index">
           <nb-content>
-            <nb-list-item itemHeader first>
-                <nb-text :style="{ fontSize: '25' }">記録</nb-text>
+            <nb-list-item itemDivider>
+                <nb-text class="index-title">記録</nb-text>
             </nb-list-item>
             <view v-for="(post, index) in posts" :key="index" >
               <item
@@ -24,18 +24,19 @@
           :isVisible="isModalVisible"
         >
           <view class="modal">
-            <nb-header>
+            <nb-header class="modal-header">
               <nb-left>
                 <nb-button transparent 
                   :on-press="toggleModal"
                 >
                   <nb-icon 
+                    class="back-icon"
                     type="Entypo"
                     name="back" />
                 </nb-button>
               </nb-left>
               <nb-body>
-                <nb-title>入力フォーム</nb-title>
+                <nb-title class="modal-title">入力フォーム</nb-title>
               </nb-body>
               <nb-right />
             </nb-header>
@@ -89,7 +90,7 @@
     
         <view class="footer">
           <view class="button">
-            <nb-icon type="AntDesign" name="plus" class="plus" :on-press="toggleModal" />
+            <nb-icon type="FontAwesome5" name="thermometer" class="meter-icon" :on-press="toggleModal" />
           </view>
         </view>
     </root>
@@ -99,7 +100,7 @@
 <script>
 import { Root } from "native-base";
 import Header from "./components/header.vue";
-import Chart from "./components/chart.vue";
+import Chart from "./components/rChart.js";
 import Item from "./components/item.vue";
 import { Alert } from 'react-native';
 import Modal from "react-native-modal";
@@ -196,6 +197,13 @@ export default {
   position: relative;
 }
 
+.index-title {
+  flex: 1;
+  font-size: 25;
+  text-align: center;
+  font-weight: bold;
+}
+
 .footer {
   position: absolute;
   right: 20;
@@ -212,13 +220,13 @@ export default {
   border-color: #444;
 }
 
-.plus {
-  font-size: 90px;
+.meter-icon {
+  font-size: 70px;
   color: #111;
   position: absolute;
-  top: 20;
+  top: 25;
   right: 0;
-  left: 20;
+  left: 25;
   bottom: 0;
 }
 
@@ -226,6 +234,18 @@ export default {
 .modal {
   background-color: #fff;
   height: 90%;
+}
+
+.modal-header {
+ background-color: #91e4fb;
+}
+
+.modal-title {
+  font-size: 20;
+}
+
+.back-icon {
+  color: black;
 }
 
 .date-form {

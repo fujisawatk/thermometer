@@ -2,16 +2,26 @@
   <nb-header class="header">
     <nb-left />
       <nb-body>
-        <nb-title>検温アプリ</nb-title>
+        <nb-title class="header-title">検温アプリ</nb-title>
       </nb-body>
-    <nb-right />
+    <nb-right>
+      <nb-button transparent>
+        <nb-icon class="medical-icon" type="FontAwesome5" name="clinic-medical" :on-press="openLink" />
+      </nb-button>
+    </nb-right>
   </nb-header>
 </template>
 
 <script>
+import { Linking } from "react-native";
+
 export default {
-  props: {
-      data: Object
+  methods: {
+      openLink: function() {
+        Linking
+          .openURL("https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/dengue_fever_qa_00001.html")
+          .catch(err => console.error('URLを開けませんでした。', err));
+      }
   },
 };
 </script>
@@ -19,5 +29,11 @@ export default {
 <style>
 .header {
  background-color: #91e4fb;
+}
+.header-title {
+  font-size: 23;
+}
+.medical-icon {
+  color: black;
 }
 </style>
