@@ -22,7 +22,7 @@ export default class Chart extends React.Component {
         <VictoryChart
             domainPadding={{x: 40}}
             style={{marginLeft: 120}}
-            height={400}
+            height={250}
             maxDomain={{x:8, y: 40.0}}
             minDomain={{x:1, y: 34.0}}
             theme={VictoryTheme.material}
