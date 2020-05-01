@@ -26,20 +26,21 @@ export default new Vuex.Store({
     chartData: []
   },
   mutations: {
-    savePosts: function(state, postsObj) {
-      // console.log(String(this.state.id))
+    savePost: function(state, postsObj) {
       // 日付を取得してキーとして設定する
       var keyDate = String(this.state.iniDate)
-      console.log(keyDate)
       storage.save({
         key: keyDate,
         data: postsObj
       })
+    },
+    delPost: function(state, delDate) {
+      storage.remove({key: delDate});
     }
   },
   actions: {
-    savePostsOne: function({commit}, {thermometer}) {
-      commit('savePosts', {
+    savePostOne: function({commit}, {thermometer}) {
+      commit('savePost', {
         date: this.state.iniDate,
         thermometer: thermometer,
         checkOne: this.state.iniCheckOne,
@@ -56,18 +57,13 @@ export default new Vuex.Store({
       // 記録一覧表示処理
       this.state.posts = []
       this.state.chartData = []
-      // 今日の日付から過去の７日分をとる（繰り返し）
       for (let i=0;i<7;i++) {
-        // その日付をキーとしたデータを取得する
         var date = new Date()
         var beforeDay = date.setDate(date.getDate() - i)
-        // 取得した前日のデータをフォーマットする
         var dString = String(moment(beforeDay).format('MM月DD日'))
-        console.log(dString)
         storage
         .load({key: dString})
         .then((val) => {
-          console.log(val)
           this.state.posts.push(val)
 
           // チャートへの反映
@@ -75,7 +71,6 @@ export default new Vuex.Store({
           hash.x = val["date"];
           hash.y = Number(val["thermometer"]);
           this.state.chartData.unshift(hash)
-          console.log(state.chartData)
         })
         .catch(err => {
           console.warn(err.message);
@@ -90,6 +85,33 @@ export default new Vuex.Store({
         })  
       }
     },
+    delPostOne: function({commit}, index) {
+      var post = this.state.posts[index]
+      var delDate = post["date"]
+      commit('delPost', delDate)
+
+      this.state.posts = []
+      this.state.chartData = []
+      for (let i=0;i<7;i++) {
+        var date = new Date()
+        var beforeDay = date.setDate(date.getDate() - i)
+        var dString = String(moment(beforeDay).format('MM月DD日'))
+        storage
+        .load({key: dString})
+        .then((val) => {
+          if(val) {
+          this.state.posts.push(val)
+          var hash = {}
+          hash.x = val["date"];
+          hash.y = Number(val["thermometer"]);
+          this.state.chartData.unshift(hash)
+          }else{
+            console.log("何もない")
+          }
+        })
+      }  
+      return
+    }
   },
   getters: {
     getPosts: function(state) {
@@ -102,30 +124,20 @@ export default new Vuex.Store({
         var beforeDay = date.setDate(date.getDate() - i)
         // 取得した前日のデータをフォーマットする
         var dString = String(moment(beforeDay).format('MM月DD日'))
-        console.log(dString)
         storage
         .load({key: dString})
         .then((val) => {
           if(val) {
-          console.log(val)
           state.posts.push(val)
           var hash = {}
           hash.x = val["date"];
           hash.y = Number(val["thermometer"]);
           state.chartData.unshift(hash)
-          console.log(state.chartData)
           }else{
             console.log("何もない")
           }
         })
       }  
     },
-             
-    // 全件削除（デバッグ用）
-    delPosts: function(state) {
-      state.posts = []
-      storage.remove({key: "05月01日"});
-      return
-    }
   }
 });

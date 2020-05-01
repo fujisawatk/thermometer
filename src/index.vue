@@ -79,7 +79,7 @@
             <view class="form-bottom">
               <nb-button large rounded
                 class="send-btn"
-                :on-press="savePosts"
+                :on-press="savePost"
               >
                 <nb-text class="send">完了</nb-text>
               </nb-button>
@@ -92,9 +92,6 @@
             <nb-icon type="AntDesign" name="plus" class="plus" :on-press="toggleModal" />
           </view>
         </view>
-
-        <!-- デバッグ用 -->
-        <nb-icon type="FontAwesome" name="square" :on-press="delPosts" />
     </root>
 </template>
 
@@ -118,7 +115,6 @@ export default {
     Chart, 
     Modal,
     Item
-    
   },
   data: function() {
     return {
@@ -174,8 +170,8 @@ export default {
     },
 
     // 記録を保存して、モーダルを閉じる
-    savePosts: function() {
-      store.dispatch("savePostsOne", {
+    savePost: function() {
+      store.dispatch("savePostOne", {
         thermometer: this.iniThermometer
       })
       this.iniThermometer = "36.5"
@@ -188,7 +184,8 @@ export default {
       return Alert.alert("削除しました")
     },
     delPost: function(index) {
-      console.log(index)
+      store.dispatch("delPostOne", index)
+      return
     }
   }
 };
