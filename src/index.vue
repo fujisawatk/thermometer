@@ -28,41 +28,35 @@
             <view class="form">
               <nb-item class="date-form">
                 <nb-text class="date-title">日付</nb-text>
-                <nb-date-picker
-                  :defaultDate="defaultDate"
-                  :modalTransparent="false"
-                  androidMode="default"
-                  :textStyle="{ color: 'black', fontSize: 25 }"
-                  :formatChosenDate="formatChosenDate"
-                />
+                <nb-text class="date-text">{{ formatIniDate }}</nb-text>
               </nb-item>
 
               <nb-item class="temp-form">
                 <nb-text class="temp-title">体温</nb-text>
-                <text-input placeholder="例）36.0" class="temp-input" />
+                <text-input class="temp-input" v-model="iniThermometer" />
                 <nb-text class="temp-unit">℃</nb-text>
               </nb-item>
               <nb-item class="cond-form">
                 <nb-text class="cond-title">症状</nb-text>
-                <nb-checkbox :checked="true" />
+                <nb-checkbox :checked="checkOne" :on-press="changeCheckOne"/>
                 <nb-text class="cond-text">37.5度以上の熱</nb-text>
               </nb-item>
 
               <nb-item class="cond-form">
                 <nb-text class="cond-title" />
-                <nb-checkbox :checked="true" />
+                <nb-checkbox :checked="checkTwo" :on-press="changeCheckTwo" />
                 <nb-text class="cond-text">せき、たん</nb-text>
               </nb-item>
 
               <nb-item class="cond-form">
                 <nb-text class="cond-title" />
-                <nb-checkbox :checked="true" />
+                <nb-checkbox :checked="checkThree" :on-press="changeCheckThree" />
                 <nb-text class="cond-text">だるさ</nb-text>
               </nb-item>
 
               <nb-item class="cond-form">
                 <nb-text class="cond-title" />
-                <nb-checkbox :checked="true" />
+                <nb-checkbox :checked="checkFour" :on-press="changeCheckFour" />
                 <nb-text class="cond-text">息苦しさ</nb-text>
               </nb-item>
 
@@ -70,7 +64,7 @@
             <view class="form-bottom">
               <nb-button large rounded
                 class="send-btn"
-                :on-press="toggleModal"
+                :on-press="savePosts"
               >
                 <nb-text class="send">完了</nb-text>
               </nb-button>
@@ -78,12 +72,14 @@
           </view>
         </modal>
     
-
         <view class="footer">
           <view class="button">
             <nb-icon type="AntDesign" name="plus" class="plus" :on-press="toggleModal" />
           </view>
         </view>
+
+        <!-- デバッグ用 -->
+        <nb-icon type="FontAwesome" name="square" :on-press="delPosts" />
     </root>
 </template>
 
@@ -91,13 +87,14 @@
 <script>
 import { Root } from "native-base";
 import Header from "./components/header.vue";
-import Chart from "./components/rChart.js";
+import Chart from "./components/chart.vue";
 import List from "./components/list.vue";
 // import Btn from "./components/btn.vue";
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, Alert } from 'react-native';
 import Modal from "react-native-modal";
 import React from "react";
 import moment from 'moment';
+import store from './store';
 
 export default {
   components: {
@@ -112,20 +109,67 @@ export default {
   },
   data: function() {
     return {
+      // モーダルON/OFF
       state: false,
-      chosenDate: new Date(),
-      defaultDate: new Date(),
-      formatChosenDate: date => moment(date).format('YYYY年MM月DD日')
+      formatIniDate: moment(new Date()).format('MM月DD日'),
+      iniThermometer: "36.5",
     }
   },
+  created () {
+    store.getters.getPosts;
+  },
   computed: {
+    // モーダルのON/OFFを監視
     isModalVisible: function() {
       return this.state
+    },
+    // 初期値の変更を監視
+    checkOne: function() {
+      return store.state.iniCheckOne;
+    },
+    checkTwo: function() {
+      return store.state.iniCheckTwo;
+    },
+    checkThree: function() {
+      return store.state.iniCheckThree;
+    },
+    checkFour: function() {
+      return store.state.iniCheckFour;
     }
   },
   methods: {
+    // モーダルのON/OFF切り替え
     toggleModal: function() {
       return this.state = !this.state
+    },
+
+    // チェックのON/OFF切り替え
+    changeCheckOne: function() {
+      return store.state.iniCheckOne = !store.state.iniCheckOne
+    },
+    changeCheckTwo: function() {
+      return store.state.iniCheckTwo = !store.state.iniCheckTwo
+    },
+    changeCheckThree: function() {
+      return store.state.iniCheckThree = !store.state.iniCheckThree
+    },
+    changeCheckFour: function() {
+      return store.state.iniCheckFour = !store.state.iniCheckFour
+    },
+
+    // 記録を保存して、モーダルを閉じる
+    savePosts: function() {
+      store.dispatch("savePostsOne", {
+        thermometer: this.iniThermometer
+      })
+      this.iniThermometer = "36.5"
+      return this.state = !this.state;
+    },
+
+    // 記録全件削除処理（デバッグ用）
+    delPosts: function() {
+      store.getters.delPosts;
+      return Alert.alert("削除しました")
     }
   }
 };
@@ -199,6 +243,7 @@ export default {
   margin-left: 40px;
 }
 
+.date-text,
 .temp-unit,
 .cond-text {
   font-size: 20px;
