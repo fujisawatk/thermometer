@@ -2,7 +2,22 @@
     <root class="root">
         <header />
         <chart />
-        <list />
+
+      <!-- 記録リスト一覧 -->
+        <nb-container class="index">
+          <nb-content>
+            <nb-list-item itemHeader first>
+                <nb-text :style="{ fontSize: '25' }">記録</nb-text>
+            </nb-list-item>
+            <view v-for="(post, index) in posts" :key="index" >
+              <item
+                :post="post"
+                :sel-index="index"
+                :del-post="delPost"
+              />
+            </view>
+          </nb-content>
+        </nb-container>
 
       <!-- モーダル画面 -->
         <modal 
@@ -64,7 +79,7 @@
             <view class="form-bottom">
               <nb-button large rounded
                 class="send-btn"
-                :on-press="savePosts"
+                :on-press="savePost"
               >
                 <nb-text class="send">完了</nb-text>
               </nb-button>
@@ -77,9 +92,6 @@
             <nb-icon type="AntDesign" name="plus" class="plus" :on-press="toggleModal" />
           </view>
         </view>
-
-        <!-- デバッグ用 -->
-        <nb-icon type="FontAwesome" name="square" :on-press="delPosts" />
     </root>
 </template>
 
@@ -88,24 +100,21 @@
 import { Root } from "native-base";
 import Header from "./components/header.vue";
 import Chart from "./components/chart.vue";
-import List from "./components/list.vue";
-// import Btn from "./components/btn.vue";
-import { SafeAreaView, Alert } from 'react-native';
+import Item from "./components/item.vue";
+import { Alert } from 'react-native';
 import Modal from "react-native-modal";
 import React from "react";
 import moment from 'moment';
 import store from './store';
+
 
 export default {
   components: {
     Root,
     Header, 
     Chart, 
-    List,
-    // Btn,
-    SafeAreaView,
-    Modal
-    
+    Modal,
+    Item
   },
   data: function() {
     return {
@@ -135,6 +144,9 @@ export default {
     },
     checkFour: function() {
       return store.state.iniCheckFour;
+    },
+    posts () {
+      return store.state.posts;
     }
   },
   methods: {
@@ -158,8 +170,8 @@ export default {
     },
 
     // 記録を保存して、モーダルを閉じる
-    savePosts: function() {
-      store.dispatch("savePostsOne", {
+    savePost: function() {
+      store.dispatch("savePostOne", {
         thermometer: this.iniThermometer
       })
       this.iniThermometer = "36.5"
@@ -170,6 +182,10 @@ export default {
     delPosts: function() {
       store.getters.delPosts;
       return Alert.alert("削除しました")
+    },
+    delPost: function(index) {
+      store.dispatch("delPostOne", index)
+      return
     }
   }
 };
