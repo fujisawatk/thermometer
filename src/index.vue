@@ -76,14 +76,16 @@
                 <nb-text class="cond-text">息苦しさ</nb-text>
               </nb-item>
 
-            </view>
-            <view class="form-bottom">
-              <nb-button large rounded
+              <nb-item class="cond-form" />
+
+              <nb-item class="form-bottom">
+                <nb-button large rounded
                 class="send-btn"
                 :on-press="savePost"
               >
                 <nb-text class="send">完了</nb-text>
               </nb-button>
+              </nb-item>
             </view>
           </view>
         </modal>
@@ -213,20 +215,20 @@ export default {
 .button {
   position: relative;
   background-color: #91e4fb;
-  width: 130px;
-  height: 130px;
-  border-radius: 65px;
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
   border-width: 2;
   border-color: #444;
 }
 
 .meter-icon {
-  font-size: 70px;
+  font-size: 40px;
   color: #111;
   position: absolute;
-  top: 25;
+  top: 20;
   right: 0;
-  left: 25;
+  left: 15;
   bottom: 0;
 }
 
@@ -241,7 +243,7 @@ export default {
 }
 
 .modal-title {
-  font-size: 20;
+  font-size: 18;
 }
 
 .back-icon {
@@ -249,14 +251,13 @@ export default {
 }
 
 .date-form {
-  height: 80px;
-  margin-top: 30px;
+  height: 60;
   border-color: #fff;
 }
 
 .temp-form,
 .cond-form {
-  height: 80px;
+  height: 60;
   border-color: #fff;
 }
 
@@ -266,7 +267,7 @@ export default {
   height: 100%;
   width: 30%;
   text-align: center;
-  line-height: 80;
+  line-height: 60;
   font-size: 25px;
   font-weight: bold;
 }
@@ -287,16 +288,15 @@ export default {
 }
 
 .form-bottom {
-  margin-top: 50px;
-  position: relative;
+  border-color: #fff;
 }
 
 .send-btn {
+  flex: 1;
   background-color: #91e4fb;
   color: black;
-  width: 200px;
-  position: absolute;
-  right: 25%;
+  margin-left: 50;
+  margin-right: 50;
   border-width: 2;
   border-color: #444;
 }

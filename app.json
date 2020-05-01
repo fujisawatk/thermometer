@@ -26,7 +26,14 @@
     },
     "packagerOpts": {
       "config": "metro.config.js",
-      "sourceExts":["js", "json", "ts", "tsx", "vue"]
-    }
+      "sourceExts": [
+        "js",
+        "json",
+        "ts",
+        "tsx",
+        "vue"
+      ]
+    },
+    "description": ""
   }
 }
