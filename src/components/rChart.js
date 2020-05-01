@@ -1,55 +1,66 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { VictoryTheme, VictoryChart, VictoryAxis, VictoryLine } from 'victory-native';
+import {
+  VictoryTheme,
+  VictoryChart,
+  VictoryAxis,
+  VictoryLine,
+  VictoryVoronoiContainer,
+  VictoryTooltip,
+  VictoryScatter,
+  VictoryGroup } from 'victory-native';
+import store from '../store';
+
 
 export default class Chart extends React.Component {
   render() {
+
+    const line = store.state.chartData
+
     return (
       <View style={styles.container}>
-      <VictoryChart
-          domainPadding={{x: 40}}
-          style={{marginLeft: 120}}
-          height={400}
-          maxDomain={{x:9, y: 40.0}}
-          minDomain={{x:1, y: 34.0}}
-          theme={VictoryTheme.material}
+        <VictoryChart
+            domainPadding={{x: 40}}
+            style={{marginLeft: 120}}
+            height={400}
+            maxDomain={{x:8, y: 40.0}}
+            minDomain={{x:1, y: 34.0}}
+            theme={VictoryTheme.material}
+            containerComponent={<VictoryVoronoiContainer/>}
         >
+        <VictoryGroup
+            color="#000080"
+            labels={({ datum }) => `${datum.y}℃`}
+            labelComponent={
+              <VictoryTooltip
+                style={{ fontSize: 10 }}
+              />
+            }
+            data={ line }
+          >
+            <VictoryLine
+              style={{
+                      data: { stroke: "#000080", strokeLinecap: "round", strokeWidth: 3 }
+                    }}
+            />
+            <VictoryScatter
+              size={({ active }) => active ? 10 : 5}
+            />
+          </VictoryGroup>
           <VictoryLine
             data={[
               {x: 0, y: 37.5},
-              {x: 9, y: 37.5}
+              {x: 8, y: 37.5}
             ]}
             style={{
-              data: { stroke: "red"},
+              data: { stroke: "red", strokeWidth: 1},
             }}
-          />
-
-          <VictoryLine
-            data={[
-              { x: 1, y: 36.5 },
-              { x: 2, y: 36.7 },
-              { x: 3, y: 38.5 },
-              { x: 4, y: 38.7 },
-              { x: 5, y: 39.6 },
-              { x: 7, y: 37.4 },
-            ]}
-            x="x"
-            y="y"
-            style={{
-              data: { stroke: "teal", strokeWidth: 5, strokeLinecap: "round" },
-              labels: {fontSize: 12},
-              parent: { border: "1px solid #ccc"}
-            }}
-            animate={{
-              duration: 5000,
-              onLoad: { duration: 3000 }
-            }}
-
           />
           <VictoryAxis
             label="日付"
             style={{
-              axisLabel: { padding: 30 }
+              axisLabel: { padding: 30 },
+              tickLabels: {fontSize: 10, padding: 5}
             }}
           />
           <VictoryAxis dependentAxis
@@ -58,7 +69,7 @@ export default class Chart extends React.Component {
               axisLabel: { padding: 40 }
             }}
           />
-      </VictoryChart>
+        </VictoryChart>
       </View>
     );
   }
@@ -66,7 +77,7 @@ export default class Chart extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },

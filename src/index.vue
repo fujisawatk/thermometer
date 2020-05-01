@@ -99,7 +99,7 @@
 <script>
 import { Root } from "native-base";
 import Header from "./components/header.vue";
-import Chart from "./components/chart.vue";
+import Chart from "./components/rChart.js";
 import Item from "./components/item.vue";
 import { Alert } from 'react-native';
 import Modal from "react-native-modal";
