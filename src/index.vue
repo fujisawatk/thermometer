@@ -87,7 +87,7 @@
 <script>
 import { Root } from "native-base";
 import Header from "./components/header.vue";
-import Chart from "./components/rChart.js";
+import Chart from "./components/chart.vue";
 import List from "./components/list.vue";
 // import Btn from "./components/btn.vue";
 import { SafeAreaView, Alert } from 'react-native';

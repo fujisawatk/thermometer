@@ -23,21 +23,22 @@ export default new Vuex.Store({
     iniCheckTwo: false,
     iniCheckThree: false,
     iniCheckFour: false,
-    id: 0
+    chartData: []
   },
   mutations: {
     savePosts: function(state, postsObj) {
-      console.log(String(this.state.id))
+      // console.log(String(this.state.id))
+      // 日付を取得してキーとして設定する
+      var keyDate = String(this.state.iniDate)
+      console.log(keyDate)
       storage.save({
-        key: 'posts',
-        id: String(this.state.id),
+        key: keyDate,
         data: postsObj
       })
     }
   },
   actions: {
     savePostsOne: function({commit}, {thermometer}) {
-      this.state.id++
       commit('savePosts', {
         date: this.state.iniDate,
         thermometer: thermometer,
@@ -54,50 +55,76 @@ export default new Vuex.Store({
 
       // 記録一覧表示処理
       this.state.posts = []
-      storage
-        .getIdsForKey('posts')
-        .then((ids) => {
-          if (ids){
-            for (var i in ids) {
-              storage.load({
-                key: 'posts',
-                id: ids[i]
-              }).then((val) => {
-              this.state.posts.push(val)    
-              })
-            }
-            return console.log(`${ids.length}` + "件取得しました");
-          }else{
-            return console.log("何もない")
-          }
+      this.state.chartData = []
+      // 今日の日付から過去の７日分をとる（繰り返し）
+      for (let i=0;i<7;i++) {
+        // その日付をキーとしたデータを取得する
+        var date = new Date()
+        var beforeDay = date.setDate(date.getDate() - i)
+        // 取得した前日のデータをフォーマットする
+        var dString = String(moment(beforeDay).format('MM月DD日'))
+        console.log(dString)
+        storage
+        .load({key: dString})
+        .then((val) => {
+          console.log(val)
+          this.state.posts.push(val)
+
+          // チャートへの反映
+          var hash = {}
+          hash.x = val["date"];
+          hash.y = Number(val["thermometer"]);
+          this.state.chartData.unshift(hash)
+          console.log(state.chartData)
         })
+        .catch(err => {
+          console.warn(err.message);
+          switch (err.name) {
+            case 'NotFoundError':
+              // TODO;
+              break;
+            case 'ExpiredError':
+              // TODO
+              break;
+          }
+        })  
+      }
     },
   },
   getters: {
     getPosts: function(state) {
       state.posts = []
-      storage
-        .getIdsForKey('posts')
-        .then((ids) => {
-          if (ids){
-            for (var i in ids) {
-              storage.load({
-                key: 'posts',
-                id: ids[i]
-              }).then((val) => {
-              state.posts.push(val)    
-              })
-            }
-            return;
+      state.chartData = []
+      // 今日の日付から過去の７日分をとる（繰り返し）
+      for (let i=0;i<7;i++) {
+        // その日付をキーとしたデータを取得する
+        var date = new Date()
+        var beforeDay = date.setDate(date.getDate() - i)
+        // 取得した前日のデータをフォーマットする
+        var dString = String(moment(beforeDay).format('MM月DD日'))
+        console.log(dString)
+        storage
+        .load({key: dString})
+        .then((val) => {
+          if(val) {
+          console.log(val)
+          state.posts.push(val)
+          var hash = {}
+          hash.x = val["date"];
+          hash.y = Number(val["thermometer"]);
+          state.chartData.unshift(hash)
+          console.log(state.chartData)
           }else{
-            return console.log("何もない")
+            console.log("何もない")
           }
         })
+      }  
     },
+             
     // 全件削除（デバッグ用）
     delPosts: function(state) {
       state.posts = []
-      storage.clearMapForKey('posts');
+      storage.remove({key: "05月01日"});
       return
     }
   }
