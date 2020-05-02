@@ -9,7 +9,7 @@ Vue.use(Vuex);
 const storage = new Storage({
   size: 1000,
   storageBackend: AsyncStorage,
-  defaultExpires: 1000 * 3600 * 24 * 10,
+  defaultExpires: 1000 * 3600 * 240,
   enableCache: true,
   sync: {}
 });
@@ -23,7 +23,18 @@ export default new Vuex.Store({
     iniCheckTwo: false,
     iniCheckThree: false,
     iniCheckFour: false,
-    chartData: []
+    chartData: [],
+    iniThermometer: "36.5",
+    thermoData: [
+      "34.0","34.1","34.2","34.3","34.4","34.5","34.6","34.7","34.8","34.9",
+      "35.0","35.1","35.2","35.3","35.4","35.5","35.6","35.7","35.8","35.9",
+      "36.0","36.1","36.2","36.3","36.4","36.5","36.6","36.7","36.8","36.9",
+      "37.0","37.1","37.2","37.3","37.4","37.5","37.6","37.7","37.8","37.9",
+      "38.0","38.1","38.2","38.3","38.4","38.5","38.6","38.7","38.8","38.9",
+      "39.0","39.1","39.2","39.3","39.4","39.5","39.6","39.7","39.8","39.9",
+      "40.0","40.1","40.2","40.3","40.4","40.5","40.6","40.7","40.8","40.9",
+      "41.0","41.1","41.2","41.3","41.4","41.5","41.6","41.7","41.8","41.9",
+    ]
   },
   mutations: {
     savePost: function(state, postsObj) {
@@ -39,10 +50,10 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    savePostOne: function({commit}, {thermometer}) {
+    savePostOne: function({commit}) {
       commit('savePost', {
         date: this.state.iniDate,
-        thermometer: thermometer,
+        thermometer: this.state.iniThermometer,
         checkOne: this.state.iniCheckOne,
         checkTwo: this.state.iniCheckTwo,
         checkThree: this.state.iniCheckThree,
@@ -53,6 +64,7 @@ export default new Vuex.Store({
       this.state.iniCheckTwo = false
       this.state.iniCheckThree = false
       this.state.iniCheckFour = false
+      this.state.iniThermometer = "36.5"
 
       // 記録一覧表示処理
       this.state.posts = []
@@ -117,12 +129,9 @@ export default new Vuex.Store({
     getPosts: function(state) {
       state.posts = []
       state.chartData = []
-      // 今日の日付から過去の７日分をとる（繰り返し）
       for (let i=0;i<7;i++) {
-        // その日付をキーとしたデータを取得する
         var date = new Date()
         var beforeDay = date.setDate(date.getDate() - i)
-        // 取得した前日のデータをフォーマットする
         var dString = String(moment(beforeDay).format('MM月DD日'))
         storage
         .load({key: dString})

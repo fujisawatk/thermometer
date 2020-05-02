@@ -49,7 +49,18 @@
 
               <nb-item class="temp-form">
                 <nb-text class="temp-title">体温</nb-text>
-                <text-input class="temp-input" v-model="iniThermometer" />
+
+                <TouchableOpacity :onPress="() => {this.pickerRef.show()}">
+                  <Text class="temp-input" >{{ thermometer }}</Text>
+                </TouchableOpacity>
+
+                <ReactNativePickerModule
+                  :pickerRef="e => this.pickerRef = e"
+                  :title="`本日の体温は？`"
+                  :items="thermoData"
+                  :onValueChange="onValueChange"
+                />
+
                 <nb-text class="temp-unit">℃</nb-text>
               </nb-item>
               <nb-item class="cond-form">
@@ -109,7 +120,7 @@ import Modal from "react-native-modal";
 import React from "react";
 import moment from 'moment';
 import store from './store';
-
+import ReactNativePickerModule from 'react-native-picker-module'
 
 export default {
   components: {
@@ -117,14 +128,15 @@ export default {
     Header, 
     Chart, 
     Modal,
-    Item
+    Item,
+    ReactNativePickerModule
   },
   data: function() {
     return {
       // モーダルON/OFF
       state: false,
       formatIniDate: moment(new Date()).format('MM月DD日'),
-      iniThermometer: "36.5",
+      thermoData: store.state.thermoData
     }
   },
   created () {
@@ -150,6 +162,9 @@ export default {
     },
     posts () {
       return store.state.posts;
+    },
+    thermometer: function() {
+      return store.state.iniThermometer
     }
   },
   methods: {
@@ -171,25 +186,18 @@ export default {
     changeCheckFour: function() {
       return store.state.iniCheckFour = !store.state.iniCheckFour
     },
-
-    // 記録を保存して、モーダルを閉じる
     savePost: function() {
-      store.dispatch("savePostOne", {
-        thermometer: this.iniThermometer
-      })
-      this.iniThermometer = "36.5"
+      store.dispatch("savePostOne") 
       return this.state = !this.state;
-    },
-
-    // 記録全件削除処理（デバッグ用）
-    delPosts: function() {
-      store.getters.delPosts;
-      return Alert.alert("削除しました")
     },
     delPost: function(index) {
       store.dispatch("delPostOne", index)
       return
-    }
+    },
+    onValueChange: function(value){
+    store.state.iniThermometer = value
+      return
+    } 
   }
 };
 </script> 
@@ -273,11 +281,9 @@ export default {
 }
 
 .temp-input {
-  padding: 10px 60px;
   font-size: 20;
-  border-width: 1;
-  width: 100px;
-  margin-left: 40px;
+  margin-left: 15px;
+  color: red;
 }
 
 .date-text,
