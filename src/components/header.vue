@@ -6,7 +6,7 @@
       </nb-body>
     <nb-right>
       <nb-button transparent>
-        <nb-icon class="medical-icon" type="FontAwesome5" name="clinic-medical" :on-press="openLink" />
+        <nb-icon class="medical-icon" type="FontAwesome5" name="hospital-alt" :on-press="openLink" />
       </nb-button>
     </nb-right>
   </nb-header>
