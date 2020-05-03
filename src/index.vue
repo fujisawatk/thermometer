@@ -49,20 +49,16 @@
 
               <nb-item class="temp-form">
                 <nb-text class="temp-title">体温</nb-text>
-
-                <TouchableOpacity :onPress="() => {this.pickerRef.show()}">
-                  <Text class="temp-input" >{{ thermometer }}</Text>
-                </TouchableOpacity>
-
-                <ReactNativePickerModule
-                  :pickerRef="e => this.pickerRef = e"
-                  :title="`本日の体温は？`"
-                  :items="thermoData"
-                  :onValueChange="onValueChange"
+                <select-input
+                  class="temp-select"
+                  :value="pickerValue"
+                  :options="thermoData"
+                  :onSubmitEditing="onValueChange"
+                  :labelStyle="labelStyle"
                 />
-
                 <nb-text class="temp-unit">℃</nb-text>
               </nb-item>
+
               <nb-item class="cond-form">
                 <nb-text class="cond-title">症状</nb-text>
                 <nb-checkbox :checked="checkOne" :on-press="changeCheckOne"/>
@@ -87,8 +83,6 @@
                 <nb-text class="cond-text">息苦しさ</nb-text>
               </nb-item>
 
-              <nb-item class="cond-form" />
-
               <nb-item class="form-bottom">
                 <nb-button large rounded
                 class="send-btn"
@@ -101,6 +95,7 @@
           </view>
         </modal>
     
+      <!-- 入力フォーム表示ボタン -->
         <view class="footer">
           <view class="button">
             <nb-icon type="FontAwesome5" name="thermometer" class="meter-icon" :on-press="toggleModal" />
@@ -120,7 +115,7 @@ import Modal from "react-native-modal";
 import React from "react";
 import moment from 'moment';
 import store from './store';
-import ReactNativePickerModule from 'react-native-picker-module'
+import SelectInput from 'react-native-select-input-ios'
 
 export default {
   components: {
@@ -129,14 +124,21 @@ export default {
     Chart, 
     Modal,
     Item,
-    ReactNativePickerModule
+    SelectInput
   },
   data: function() {
     return {
       // モーダルON/OFF
       state: false,
       formatIniDate: moment(new Date()).format('MM月DD日'),
-      thermoData: store.state.thermoData
+      thermoData: store.state.thermoData,
+      labelStyle: { fontSize: 20,
+                    backgroundColor: "#eee",
+                    borderColor: "#444",
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    padding: 5
+                  }
     }
   },
   created () {
@@ -163,8 +165,8 @@ export default {
     posts () {
       return store.state.posts;
     },
-    thermometer: function() {
-      return store.state.iniThermometer
+    pickerValue: function() {
+      return store.state.pickerValue
     }
   },
   methods: {
@@ -195,21 +197,23 @@ export default {
       return
     },
     onValueChange: function(value){
-    store.state.iniThermometer = value
+      var selObj = store.state.thermoData[value]
+      store.state.pickerValue = selObj["value"]
+      store.state.iniThermometer = selObj["label"]
       return
-    } 
+    },
   }
 };
 </script> 
 
 <style>
 .root {
+  flex: 1;
   position: relative;
 }
 
 .index-title {
   flex: 1;
-  font-size: 25;
   text-align: center;
   font-weight: bold;
 }
@@ -243,7 +247,7 @@ export default {
 /* モーダル画面 */
 .modal {
   background-color: #fff;
-  height: 90%;
+  height: 95%;
 }
 
 .modal-header {
@@ -251,7 +255,7 @@ export default {
 }
 
 .modal-title {
-  font-size: 18;
+  font-size: 15;
 }
 
 .back-icon {
@@ -276,14 +280,14 @@ export default {
   width: 30%;
   text-align: center;
   line-height: 60;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: bold;
 }
 
-.temp-input {
-  font-size: 20;
+.temp-select {
+  font-size: 30;
   margin-left: 15px;
-  color: red;
+  width: 100;
 }
 
 .date-text,
