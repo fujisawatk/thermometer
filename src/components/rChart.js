@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import {
   VictoryTheme,
   VictoryChart,
@@ -11,6 +11,7 @@ import {
   VictoryGroup } from 'victory-native';
 import store from '../store';
 
+const {height, width} = Dimensions.get('window');
 
 export default class Chart extends React.Component {
   render() {
@@ -22,7 +23,7 @@ export default class Chart extends React.Component {
         <VictoryChart
             domainPadding={{x: 40}}
             style={{marginLeft: 120}}
-            height={250}
+            height={height * (3/7)}
             maxDomain={{x:8, y: 40.0}}
             minDomain={{x:1, y: 34.0}}
             theme={VictoryTheme.material}
@@ -33,7 +34,7 @@ export default class Chart extends React.Component {
             labels={({ datum }) => `${datum.y}℃`}
             labelComponent={
               <VictoryTooltip
-                style={{ fontSize: 10 }}
+                style={{ fontSize: 20 }}
               />
             }
             data={ line }
@@ -60,13 +61,14 @@ export default class Chart extends React.Component {
             label="日付"
             style={{
               axisLabel: { padding: 30 },
-              tickLabels: {fontSize: 10, padding: 5}
+              tickLabels: {fontSize: 8, padding: 5}
             }}
           />
           <VictoryAxis dependentAxis
             label="体温"
             style={{
-              axisLabel: { padding: 40 }
+              axisLabel: { padding: 35 },
+              tickLabels: {fontSize: 10, padding: 5}
             }}
           />
         </VictoryChart>
@@ -77,6 +79,7 @@ export default class Chart extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
