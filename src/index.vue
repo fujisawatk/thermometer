@@ -25,7 +25,7 @@
         >
           <view class="modal">
             <nb-header class="modal-header">
-              <nb-left>
+              <nb-left  class="modal-header-left">
                 <nb-button transparent 
                   :on-press="toggleModal"
                 >
@@ -35,10 +35,10 @@
                     name="back" />
                 </nb-button>
               </nb-left>
-              <nb-body>
-                <nb-title class="modal-title">入力フォーム</nb-title>
+              <nb-body class="modal-header-body">
+                <nb-title class="modal-header-title">入力フォーム</nb-title>
               </nb-body>
-              <nb-right />
+              <nb-right class="modal-header-right" />
             </nb-header>
 
             <view class="form">
@@ -49,47 +49,56 @@
 
               <nb-item class="temp-form">
                 <nb-text class="temp-title">体温</nb-text>
-                <select-input
-                  class="temp-select"
-                  :value="pickerValue"
-                  :options="thermoData"
-                  :onSubmitEditing="onValueChange"
-                  :labelStyle="labelStyle"
-                />
-                <nb-text class="temp-unit">℃</nb-text>
+                <view class="temp-group">
+                  <select-input
+                    :value="pickerValue"
+                    :options="thermoData"
+                    :onSubmitEditing="onValueChange"
+                    :labelStyle="labelStyle"
+                  />
+                  <nb-text class="temp-unit">℃</nb-text>
+                </view>
               </nb-item>
 
               <nb-item class="cond-form">
                 <nb-text class="cond-title">症状</nb-text>
-                <nb-checkbox :checked="checkOne" :on-press="changeCheckOne"/>
-                <nb-text class="cond-text">37.5度以上の熱</nb-text>
+                <view class="cond-group">
+                  <nb-checkbox :checked="checkOne" :on-press="changeCheckOne"/>
+                  <nb-text class="cond-text">37.5度以上の熱</nb-text>
+                </view>
               </nb-item>
 
               <nb-item class="cond-form">
                 <nb-text class="cond-title" />
-                <nb-checkbox :checked="checkTwo" :on-press="changeCheckTwo" />
-                <nb-text class="cond-text">せき、たん</nb-text>
+                <view class="cond-group">
+                  <nb-checkbox :checked="checkTwo" :on-press="changeCheckTwo" />
+                  <nb-text class="cond-text">せき、たん</nb-text>
+                </view>
               </nb-item>
 
               <nb-item class="cond-form">
                 <nb-text class="cond-title" />
-                <nb-checkbox :checked="checkThree" :on-press="changeCheckThree" />
-                <nb-text class="cond-text">だるさ</nb-text>
+                <view class="cond-group">
+                  <nb-checkbox :checked="checkThree" :on-press="changeCheckThree" />
+                  <nb-text class="cond-text">だるさ</nb-text>
+                </view>
               </nb-item>
 
               <nb-item class="cond-form">
                 <nb-text class="cond-title" />
-                <nb-checkbox :checked="checkFour" :on-press="changeCheckFour" />
-                <nb-text class="cond-text">息苦しさ</nb-text>
+                <view class="cond-group">
+                  <nb-checkbox :checked="checkFour" :on-press="changeCheckFour" />
+                  <nb-text class="cond-text">息苦しさ</nb-text>
+                </view>
               </nb-item>
 
               <nb-item class="form-bottom">
-                <nb-button large rounded
-                class="send-btn"
-                :on-press="savePost"
-              >
-                <nb-text class="send">完了</nb-text>
-              </nb-button>
+                <nb-button
+                  class="send-btn"
+                  :on-press="savePost"
+                >
+                  <nb-text class="send">完了</nb-text>
+                </nb-button>
               </nb-item>
             </view>
           </view>
@@ -134,10 +143,8 @@ export default {
       thermoData: store.state.thermoData,
       labelStyle: { fontSize: 20,
                     backgroundColor: "#eee",
-                    borderColor: "#444",
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    padding: 5
+                    padding: 5,
+                    width: 60
                   }
     }
   },
@@ -251,69 +258,100 @@ export default {
 }
 
 .modal-header {
- background-color: #91e4fb;
+  flex-direction: row;
+  background-color: #91e4fb;
 }
 
-.modal-title {
-  font-size: 15;
+.modal-header-left,
+.modal-header-right {
+  flex: 1;
+}
+.modal-header-body {
+  flex: 5;
+  align-items: center;
+}
+
+.modal-header-title {
+  color: black;
+  font-weight: bold;
 }
 
 .back-icon {
   color: black;
 }
 
+.form {
+  flex: 1;
+}
+
 .date-form {
-  height: 60;
+  flex: 1;
   border-color: #fff;
 }
 
 .temp-form,
 .cond-form {
-  height: 60;
+  flex: 1;
+  flex-direction: row;
   border-color: #fff;
 }
 
 .date-title,
 .temp-title,
 .cond-title {
-  height: 100%;
-  width: 30%;
+  flex: 1;
   text-align: center;
-  line-height: 60;
   font-size: 20px;
   font-weight: bold;
 }
 
-.temp-select {
-  font-size: 30;
-  margin-left: 15px;
-  width: 100;
+.date-text,
+.temp-group {
+  flex: 2;
+  flex-direction: row;
+  align-items: center;
+  font-size: 20px;
+  margin-left: 15;
 }
 
-.date-text,
-.temp-unit,
-.cond-text {
+.cond-group {
+  flex: 2;
+  flex-direction: row;
+  align-items: center;
   font-size: 20px;
-  margin-left: 15px;
+}
+
+.temp-unit{
+  margin-left: 10;
+  font-size: 20;
+}
+.cond-text {
+  margin-left: 15;
+  font-size: 20;
 }
 
 .form-bottom {
+  flex: 3;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   border-color: #fff;
 }
 
 .send-btn {
-  flex: 1;
+  flex: 0.3;
+  flex-direction: column;
+  justify-content: center;
+  width: 40%;
   background-color: #91e4fb;
   color: black;
-  margin-left: 50;
-  margin-right: 50;
   border-width: 2;
   border-color: #444;
+  border-radius: 35;
 }
 
 .send {
-  flex: 1;
-  text-align: center;
+  font-size: 20;
   font-weight: bold;
   color: #111;
 }
