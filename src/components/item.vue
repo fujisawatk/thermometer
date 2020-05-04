@@ -1,22 +1,25 @@
 <template>
   <nb-list-item icon class=list >
-    <nb-body>
+    <nb-body class="list-left">
       <nb-text class="list-day">{{ post.date }}</nb-text>
     </nb-body>
-    <nb-body>
+    <nb-body class="list-body">
       <nb-text class="list-temp">{{ post.thermometer }}℃</nb-text>
     </nb-body>
-    <nb-right>
-      <nb-icon class="check-icon" type="FontAwesome" name="square-o" v-if="post.checkOne == false"/>
-      <nb-icon class="check-icon" type="FontAwesome" name="square" v-else />
-      <nb-icon class="check-icon" type="FontAwesome" name="square-o" v-if="post.checkTwo == false"/>
-      <nb-icon class="check-icon" type="FontAwesome" name="square" v-else />
-      <nb-icon class="check-icon" type="FontAwesome" name="square-o" v-if="post.checkThree == false"/>
-      <nb-icon class="check-icon" type="FontAwesome" name="square" v-else />
-      <nb-icon class="check-icon" type="FontAwesome" name="square-o" v-if="post.checkFour == false"/>
-      <nb-icon class="check-icon" type="FontAwesome" name="square" v-else />
-      <nb-icon class="space" type="FontAwesome" name="square" />
-      <nb-icon class="del-icon" type="FontAwesome5" name="trash" :on-press="delPostPress" />
+    <nb-right class="list-right">
+      <view class="icon-group">
+        <nb-icon class="uncheck-icon" type="FontAwesome" name="square-o" v-if="post.checkOne == false"/>
+        <nb-icon class="check-icon" type="FontAwesome" name="square" v-else />
+        <nb-icon class="uncheck-icon" type="FontAwesome" name="square-o" v-if="post.checkTwo == false"/>
+        <nb-icon class="check-icon" type="FontAwesome" name="square" v-else />
+        <nb-icon class="uncheck-icon" type="FontAwesome" name="square-o" v-if="post.checkThree == false"/>
+        <nb-icon class="check-icon" type="FontAwesome" name="square" v-else />
+        <nb-icon class="uncheck-icon" type="FontAwesome" name="square-o" v-if="post.checkFour == false"/>
+        <nb-icon class="check-icon" type="FontAwesome" name="square" v-else />
+      </view>
+      <view class="del">
+        <nb-icon class="del-icon" type="FontAwesome5" name="trash" :on-press="delPostPress" />
+      </view>
     </nb-right>
   </nb-list-item>
 </template>
@@ -37,23 +40,44 @@ export default {
 </script>
 
 <style>
-.list-day {
-  font-size: 20px;
+.list {
+  flex: 1;
+  flex-direction: row;
 }
+.list-left,
+.list-body {
+  flex: 3;
+  align-items: center;
+}
+.list-day,
 .list-temp {
-  font-size: 20px;
+  font-size: 18;
 }
- .list-right {
-  display: flex;
+.list-right {
+  flex: 5;
+}
+.icon-group {
+  flex: 3;
+  flex-direction: row;
+  align-items: center;
+}
+.uncheck-icon {
+  flex: 1;
+  color: #444;
+  font-size: 22;
 }
 .check-icon {
+  flex: 1;
   color: #444;
+  font-size: 20;
 }
-.space {
-  opacity: 0;
+.del {
+  flex: 1;
+  flex-direction: row;
 }
 .del-icon {
-  padding-left: 10px;
+  flex: 1;
   color: rgb(139, 91, 139);
+  margin-left: 10;
 }
 </style>

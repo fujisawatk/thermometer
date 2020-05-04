@@ -25,7 +25,7 @@
         >
           <view class="modal">
             <nb-header class="modal-header">
-              <nb-left>
+              <nb-left  class="modal-header-left">
                 <nb-button transparent 
                   :on-press="toggleModal"
                 >
@@ -35,10 +35,10 @@
                     name="back" />
                 </nb-button>
               </nb-left>
-              <nb-body>
-                <nb-title class="modal-title">入力フォーム</nb-title>
+              <nb-body class="modal-header-body">
+                <nb-title class="modal-header-title">入力フォーム</nb-title>
               </nb-body>
-              <nb-right />
+              <nb-right class="modal-header-right" />
             </nb-header>
 
             <view class="form">
@@ -49,58 +49,62 @@
 
               <nb-item class="temp-form">
                 <nb-text class="temp-title">体温</nb-text>
-
-                <TouchableOpacity :onPress="() => {this.pickerRef.show()}">
-                  <Text class="temp-input" >{{ thermometer }}</Text>
-                </TouchableOpacity>
-
-                <ReactNativePickerModule
-                  :pickerRef="e => this.pickerRef = e"
-                  :title="`本日の体温は？`"
-                  :items="thermoData"
-                  :onValueChange="onValueChange"
-                />
-
-                <nb-text class="temp-unit">℃</nb-text>
+                <view class="temp-group">
+                  <select-input
+                    :value="pickerValue"
+                    :options="thermoData"
+                    :onSubmitEditing="onValueChange"
+                    :labelStyle="labelStyle"
+                  />
+                  <nb-text class="temp-unit">℃</nb-text>
+                </view>
               </nb-item>
+
               <nb-item class="cond-form">
                 <nb-text class="cond-title">症状</nb-text>
-                <nb-checkbox :checked="checkOne" :on-press="changeCheckOne"/>
-                <nb-text class="cond-text">37.5度以上の熱</nb-text>
+                <view class="cond-group">
+                  <nb-checkbox :checked="checkOne" :on-press="changeCheckOne"/>
+                  <nb-text class="cond-text">37.5度以上の熱</nb-text>
+                </view>
               </nb-item>
 
               <nb-item class="cond-form">
                 <nb-text class="cond-title" />
-                <nb-checkbox :checked="checkTwo" :on-press="changeCheckTwo" />
-                <nb-text class="cond-text">せき、たん</nb-text>
+                <view class="cond-group">
+                  <nb-checkbox :checked="checkTwo" :on-press="changeCheckTwo" />
+                  <nb-text class="cond-text">せき、たん</nb-text>
+                </view>
               </nb-item>
 
               <nb-item class="cond-form">
                 <nb-text class="cond-title" />
-                <nb-checkbox :checked="checkThree" :on-press="changeCheckThree" />
-                <nb-text class="cond-text">だるさ</nb-text>
+                <view class="cond-group">
+                  <nb-checkbox :checked="checkThree" :on-press="changeCheckThree" />
+                  <nb-text class="cond-text">だるさ</nb-text>
+                </view>
               </nb-item>
 
               <nb-item class="cond-form">
                 <nb-text class="cond-title" />
-                <nb-checkbox :checked="checkFour" :on-press="changeCheckFour" />
-                <nb-text class="cond-text">息苦しさ</nb-text>
+                <view class="cond-group">
+                  <nb-checkbox :checked="checkFour" :on-press="changeCheckFour" />
+                  <nb-text class="cond-text">息苦しさ</nb-text>
+                </view>
               </nb-item>
-
-              <nb-item class="cond-form" />
 
               <nb-item class="form-bottom">
-                <nb-button large rounded
-                class="send-btn"
-                :on-press="savePost"
-              >
-                <nb-text class="send">完了</nb-text>
-              </nb-button>
+                <nb-button
+                  class="send-btn"
+                  :on-press="savePost"
+                >
+                  <nb-text class="send">完了</nb-text>
+                </nb-button>
               </nb-item>
             </view>
           </view>
         </modal>
     
+      <!-- 入力フォーム表示ボタン -->
         <view class="footer">
           <view class="button">
             <nb-icon type="FontAwesome5" name="thermometer" class="meter-icon" :on-press="toggleModal" />
@@ -120,7 +124,7 @@ import Modal from "react-native-modal";
 import React from "react";
 import moment from 'moment';
 import store from './store';
-import ReactNativePickerModule from 'react-native-picker-module'
+import SelectInput from 'react-native-select-input-ios'
 
 export default {
   components: {
@@ -129,14 +133,19 @@ export default {
     Chart, 
     Modal,
     Item,
-    ReactNativePickerModule
+    SelectInput
   },
   data: function() {
     return {
       // モーダルON/OFF
       state: false,
       formatIniDate: moment(new Date()).format('MM月DD日'),
-      thermoData: store.state.thermoData
+      thermoData: store.state.thermoData,
+      labelStyle: { fontSize: 20,
+                    backgroundColor: "#eee",
+                    padding: 5,
+                    width: 60
+                  }
     }
   },
   created () {
@@ -163,8 +172,8 @@ export default {
     posts () {
       return store.state.posts;
     },
-    thermometer: function() {
-      return store.state.iniThermometer
+    pickerValue: function() {
+      return store.state.pickerValue
     }
   },
   methods: {
@@ -195,21 +204,23 @@ export default {
       return
     },
     onValueChange: function(value){
-    store.state.iniThermometer = value
+      var selObj = store.state.thermoData[value]
+      store.state.pickerValue = selObj["value"]
+      store.state.iniThermometer = selObj["label"]
       return
-    } 
+    },
   }
 };
 </script> 
 
 <style>
 .root {
+  flex: 1;
   position: relative;
 }
 
 .index-title {
   flex: 1;
-  font-size: 25;
   text-align: center;
   font-weight: bold;
 }
@@ -243,73 +254,104 @@ export default {
 /* モーダル画面 */
 .modal {
   background-color: #fff;
-  height: 90%;
+  height: 95%;
 }
 
 .modal-header {
- background-color: #91e4fb;
+  flex-direction: row;
+  background-color: #91e4fb;
 }
 
-.modal-title {
-  font-size: 18;
+.modal-header-left,
+.modal-header-right {
+  flex: 1;
+}
+.modal-header-body {
+  flex: 5;
+  align-items: center;
+}
+
+.modal-header-title {
+  color: black;
+  font-weight: bold;
 }
 
 .back-icon {
   color: black;
 }
 
+.form {
+  flex: 1;
+}
+
 .date-form {
-  height: 60;
+  flex: 1;
   border-color: #fff;
 }
 
 .temp-form,
 .cond-form {
-  height: 60;
+  flex: 1;
+  flex-direction: row;
   border-color: #fff;
 }
 
 .date-title,
 .temp-title,
 .cond-title {
-  height: 100%;
-  width: 30%;
+  flex: 1;
   text-align: center;
-  line-height: 60;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: bold;
 }
 
-.temp-input {
-  font-size: 20;
-  margin-left: 15px;
-  color: red;
+.date-text,
+.temp-group {
+  flex: 2;
+  flex-direction: row;
+  align-items: center;
+  font-size: 20px;
+  margin-left: 15;
 }
 
-.date-text,
-.temp-unit,
-.cond-text {
+.cond-group {
+  flex: 2;
+  flex-direction: row;
+  align-items: center;
   font-size: 20px;
-  margin-left: 15px;
+}
+
+.temp-unit{
+  margin-left: 10;
+  font-size: 20;
+}
+.cond-text {
+  margin-left: 15;
+  font-size: 20;
 }
 
 .form-bottom {
+  flex: 3;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   border-color: #fff;
 }
 
 .send-btn {
-  flex: 1;
+  flex: 0.3;
+  flex-direction: column;
+  justify-content: center;
+  width: 40%;
   background-color: #91e4fb;
   color: black;
-  margin-left: 50;
-  margin-right: 50;
   border-width: 2;
   border-color: #444;
+  border-radius: 35;
 }
 
 .send {
-  flex: 1;
-  text-align: center;
+  font-size: 20;
   font-weight: bold;
   color: #111;
 }
