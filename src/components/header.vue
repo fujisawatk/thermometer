@@ -2,7 +2,7 @@
   <nb-header class="header">
     <nb-left class="header-left"/>
     <nb-body class="header-body">
-      <nb-title class="header-title">検温アプリ</nb-title>
+      <nb-title class="header-title">簡単自己診断</nb-title>
     </nb-body>
     <nb-right class="header-right">
       <nb-button transparent>
@@ -40,7 +40,7 @@ export default {
 }
 
 .header-body {
-  flex: 1;
+  flex: 5;
   align-items: center;
 }
 .header-title {
@@ -50,5 +50,6 @@ export default {
 
 .medical-icon {
   color: black;
+  font-size: 20;
 }
 </style>
